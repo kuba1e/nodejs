@@ -1,0 +1,22 @@
+# Dependency directories
+node_modules/
+
+# Folder for storing local history
+.history
+
+# Optional npm cache directory
+.npm
+.npmrc
+
+# Coverage directory used by tools like istanbul
+coverage
+
+
+# Build folder
+dist
+
+# Environment variables
+.env
+.env.local
+
+.DS_Store
