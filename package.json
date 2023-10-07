@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "nodemon server.ts",
+    "dev": "nodemon ./src/server.ts",
     "build": "tsc --project ./",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",

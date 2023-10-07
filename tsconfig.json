@@ -6,6 +6,6 @@
     "outDir": "./dist",
     "esModuleInterop": true,
     "strict": false,
-    "typeRoots": ["./types/typings.d.ts"]
+    "typeRoots": ["./src/types/typings.d.ts"]
   }
 }
