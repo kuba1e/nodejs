@@ -13,3 +13,8 @@ dist
 .env.local
 
 .DS_Store
+
+# Logs folder
+
+logs
+

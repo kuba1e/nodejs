@@ -8,7 +8,7 @@ export const optionsMiddleware = (
 ) => {
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "OPTIONS, POST, GET, PUT, DELETE"
+    "OPTIONS, POST, GET, PATCH, DELETE"
   );
   res.sendStatus(HttpCode.NO_CONTENT);
 };

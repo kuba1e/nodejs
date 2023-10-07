@@ -5,6 +5,7 @@
     "rootDir": "./",
     "outDir": "./dist",
     "esModuleInterop": true,
-    "strict": false
+    "strict": false,
+    "typeRoots": ["./types/typings.d.ts"]
   }
 }
