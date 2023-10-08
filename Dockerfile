@@ -10,5 +10,6 @@ COPY --from=builder ./app/dist ./dist
 COPY package.json .
 COPY yarn.lock .
 RUN yarn install --production
+ENV PORT=5000
 EXPOSE 5000
 CMD [ "yarn", "start" ]
