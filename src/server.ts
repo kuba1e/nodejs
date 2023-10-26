@@ -6,6 +6,8 @@ import responseMiddleware from "./middlewares/responseMiddleware";
 import morganMiddleware from "./middlewares/morgan";
 import { secureRoutes } from "./routes/secure";
 import logger from "./utils/logger";
+import { AppDataSource } from "./data-source";
+import { publicRoutes } from "./routes";
 
 const PORT = process.env.PORT ?? 5000;
 
@@ -21,7 +23,16 @@ app.use(responseMiddleware);
 
 app.options("*", optionsMiddleware);
 
+app.use("/public", publicRoutes);
 app.use("/secure", secureRoutes);
+
+AppDataSource.initialize()
+  .then(() => {
+    logger.info("Database successfully started");
+  })
+  .catch((error) => {
+    logger.error(`error from db${error}`);
+  });
 
 app.listen(PORT, () => {
   logger.info(`Server running on ${PORT}.`);
