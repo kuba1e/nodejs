@@ -4,11 +4,11 @@ import { User } from "./User";
 
 @Entity()
 export class Settings {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn()
   id: string;
 
   @OneToOne(() => User, (user) => user.settings)
-  user: User;
+  user: string;
 
   @Column("json")
   chatSetting: Setting;

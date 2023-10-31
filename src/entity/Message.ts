@@ -11,7 +11,7 @@ import { Status } from "../types/chat";
 
 @Entity()
 export class Message {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column("text")

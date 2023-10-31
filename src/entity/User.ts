@@ -7,14 +7,19 @@ import {
   JoinTable,
   JoinColumn,
   CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { Settings } from "./Settings";
 import { Chat } from "./Chat";
 import { IsEmail } from "class-validator";
+import { Token } from "./Token";
+import { UserRole } from "../types/user";
+import { UserToChat } from "./UserToChat";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column({
@@ -37,7 +42,14 @@ export class User {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @Column({
+    type: "varchar",
+    length: 150,
+    unique: true,
+  })
   nickname: string;
 
   @Column()
@@ -53,4 +65,11 @@ export class User {
   @OneToOne(() => Settings, (settings) => settings.user)
   @JoinColumn()
   settings: Settings;
+
+  @OneToOne(() => Token, (token) => token.user)
+  @JoinColumn()
+  token: Token;
+
+  @OneToMany(() => UserToChat, (userToChat) => userToChat.user)
+  userToChats: Array<UserToChat>;
 }

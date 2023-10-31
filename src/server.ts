@@ -1,5 +1,7 @@
 import "dotenv/config";
 import express from "express";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import { cors } from "./middlewares/cors";
 import { optionsMiddleware } from "./middlewares/optionsMiddleware";
 import responseMiddleware from "./middlewares/responseMiddleware";
@@ -12,6 +14,10 @@ import { publicRoutes } from "./routes";
 const PORT = process.env.PORT ?? 5000;
 
 const app = express();
+
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+
+app.use(cookieParser());
 
 app.use(morganMiddleware);
 

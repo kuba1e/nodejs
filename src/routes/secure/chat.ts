@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { createChat, deleteChat, updateChat } from "../../controllers/chat";
+import { chatController } from "../../controllers/chat/chat";
 
 const router = Router();
 
-router.post("/", createChat);
+router.post("/", chatController.create);
 
-router.delete("/:chatId", deleteChat);
+router.delete("/:chatId", chatController.remove);
 
-router.patch("/:chatId", updateChat);
+router.patch("/:chatId", chatController.update);
 
 export default router;

@@ -10,10 +10,12 @@ import {
 import { Message } from "./Message";
 import { User } from "./User";
 import { Status, ChatType } from "../types/chat";
+import { UserRole } from "../types/user";
+import { UserToChat } from "./UserToChat";
 
 @Entity()
 export class Chat {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column("text")
@@ -46,4 +48,7 @@ export class Chat {
 
   @OneToMany(() => Message, (message) => message.chatId)
   messages: Message[];
+
+  @OneToMany(() => UserToChat, (userToChat) => userToChat.chat)
+  userToChats: Array<UserToChat>;
 }

@@ -1,3 +1,5 @@
+import { User } from "../entity";
+
 export {};
 
 declare global {
@@ -8,6 +10,18 @@ declare global {
       notFound: (message?: string) => void;
       serverError: (message?: string) => void;
       success: ({ data, message }: { data?: any; message?: string }) => void;
+      successWithToken: ({
+        data,
+        refreshToken,
+        message,
+      }: {
+        data?: any;
+        refreshToken?: string;
+        message?: string;
+      }) => void;
+    }
+    interface Request {
+      userData: Partial<User>;
     }
   }
 }

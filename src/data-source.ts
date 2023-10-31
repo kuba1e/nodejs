@@ -22,7 +22,7 @@ export const AppDataSource = new DataSource({
   synchronize: false,
   logging: true,
   cache: true,
-  entities: ["dist/src/entity/**/*.js"],
+  entities: ["src/entity/**"],
   subscribers: [],
-  migrations: ["dist/src/migration/**"],
+  migrations: ["src/migration/**"],
 });
