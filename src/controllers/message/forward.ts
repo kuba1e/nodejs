@@ -14,12 +14,10 @@ export const forward = async (
   try {
     const { messageId, chatId } = req.params;
 
-    const { referenceTo, forwardedBy } = req.body;
+    const { forwardedBy } = req.body;
 
-    if (!referenceTo || !forwardedBy) {
-      res.badRequest(
-        `Required data was not provided: referenceTo, forwardedBy`
-      );
+    if (!forwardedBy) {
+      res.badRequest(`Required data was not provided: forwardedBy`);
     }
 
     const chat = await ChatRepository.findOneBy({ id: chatId });
@@ -32,12 +30,12 @@ export const forward = async (
       creatorId: messageToForward.creatorId,
       status: Status.ACTIVE,
       chatId: chat.id,
-      readBy: [],
-      referenceTo: referenceTo,
+      readBy: [forwardedBy],
+      referenceTo: messageToForward.chatId,
       forwardedBy: forwardedBy,
     };
 
-    const forwardedMessage = MessageRepository.save(message);
+    const forwardedMessage = await MessageRepository.save(message);
 
     res.success({
       data: forwardedMessage,
