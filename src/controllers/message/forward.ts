@@ -7,7 +7,7 @@ import { Message } from "../../entity";
 import { ChatRepository } from "../../models/chat";
 
 export const forward = async (
-  req: TypedRequest<Pick<Message, "referenceTo" | "forwardedBy">>,
+  req: TypedRequest<Pick<Message, "forwardedBy">>,
   res: Response,
   next: NextFunction
 ) => {

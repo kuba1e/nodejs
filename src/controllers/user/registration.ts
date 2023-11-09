@@ -32,6 +32,8 @@ export const registration = async (
       chatSetting: DEFAULT_CHAT_SETTINGS,
     });
 
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
     const newUser = {
       email,
       firstName,
@@ -40,7 +42,7 @@ export const registration = async (
       phoneNumber,
       avatar,
       settings,
-      password: bcrypt.hashSync(password, saltRounds),
+      password: passwordHash,
     };
 
     const errors = await validate(newUser);

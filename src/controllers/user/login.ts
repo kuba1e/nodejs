@@ -26,7 +26,10 @@ export const login = async (
       },
     });
 
-    const passwordMatched = bcrypt.compareSync(providedPassword, user.password);
+    const passwordMatched = await bcrypt.compare(
+      providedPassword,
+      user.password
+    );
     if (passwordMatched) {
       const tokens = generate({
         email: user.email,
