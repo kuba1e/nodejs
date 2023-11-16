@@ -13,14 +13,40 @@ export const forward = async (
 ) => {
   try {
     const { messageId, chatId } = req.params;
-
-    const { forwardedBy } = req.body;
+    const forwardedBy = req.auth.id;
 
     if (!forwardedBy) {
       res.badRequest(`Required data was not provided: forwardedBy`);
+      return;
     }
 
     const chat = await ChatRepository.findOneBy({ id: chatId });
+
+    if (!chat) {
+      const message = "Chat does not exist.";
+      res.badRequest(message);
+      logger.error(message);
+      return;
+    }
+
+    const isChatRemoved = chat.status === Status.REMOVED;
+
+    if (isChatRemoved) {
+      const message = "Message cannot be forwarded to the removed chat.";
+      res.badRequest(message);
+      logger.error(message);
+      return;
+    }
+
+    const userJoinedChat = chat.users.find((user) => user.id === forwardedBy);
+
+    if (!userJoinedChat) {
+      const message = "User is not invited to the chat.";
+      res.forbidden(message);
+      logger.error(message);
+      return;
+    }
+
     const messageToForward = await MessageRepository.findOneBy({
       id: messageId,
     });

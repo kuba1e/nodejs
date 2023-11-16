@@ -35,11 +35,11 @@ app.use("/secure", secureRoutes);
 AppDataSource.initialize()
   .then(() => {
     logger.info("Database successfully started");
+
+    app.listen(PORT, () => {
+      logger.info(`Server running on ${PORT}.`);
+    });
   })
   .catch((error) => {
     logger.error(`error from db${error}`);
   });
-
-app.listen(PORT, () => {
-  logger.info(`Server running on ${PORT}.`);
-});

@@ -1,11 +1,10 @@
 import { NextFunction, Response } from "express";
-import { plainToClass } from "class-transformer";
 import { Message } from "../../entity";
 import { TypedRequest } from "../../types/request";
 import { ChatRepository } from "../../models/chat";
 import logger from "../../utils/logger";
 import { MessageRepository } from "../../models/message";
-import { MessageResponseDTO } from "../../dto/MessageResponseDTO";
+import { Status } from "../../types/chat";
 
 export const create = async (
   req: TypedRequest<Pick<Message, "text" | "creatorId">>,
@@ -14,12 +13,44 @@ export const create = async (
 ) => {
   try {
     const { chatId } = req.params;
-    const { text, creatorId } = req.body;
+    const { text } = req.body;
+    const userId = req.auth.id;
 
     const chat = await ChatRepository.findOne({
       where: { id: chatId },
     });
-    const message = { text, creatorId, chatId: chat.id, readBy: [creatorId] };
+
+    if (!chat) {
+      const message = "Chat does not exist.";
+      res.badRequest(message);
+      logger.error(message);
+      return;
+    }
+
+    const isChatRemoved = chat.status === Status.REMOVED;
+
+    if (isChatRemoved) {
+      const message = "Message cannot be forwarded to the removed chat.";
+      res.badRequest("Chat does not exist.");
+      logger.error(message);
+      return;
+    }
+
+    const userJoinedChat = chat.users.find((user) => user.id === userId);
+
+    if (!userJoinedChat) {
+      const message = "User is not invited to the chat.";
+      res.forbidden(message);
+      logger.error(message);
+      return;
+    }
+
+    const message = {
+      text,
+      creatorId: userId,
+      chatId: chat.id,
+      readBy: [userId],
+    };
 
     const savedMessage = await MessageRepository.save(message);
 

@@ -3,6 +3,8 @@ import { Message } from "../../entity";
 import { TypedRequest } from "../../types/request";
 import { MessageRepository } from "../../models/message";
 import logger from "../../utils/logger";
+import { ChatRepository } from "../../models/chat";
+import { Status } from "../../types/chat";
 
 export const update = async (
   req: TypedRequest<Partial<Message>>,
@@ -11,10 +13,46 @@ export const update = async (
 ) => {
   try {
     const { messageId } = req.params;
+    const messageToUpdate = req.body;
+    const userId = req.auth.id;
 
-    const message = req.body;
+    const message = await MessageRepository.findOneBy({ id: messageId });
 
-    await MessageRepository.update({ id: messageId }, message);
+    if (!message) {
+      const message = "Message does not exist.";
+      res.badRequest(message);
+      logger.error(message);
+      return;
+    }
+
+    const chat = await ChatRepository.findOneBy({ id: message.chatId });
+
+    if (!chat) {
+      const message = "Chat does not exist.";
+      res.badRequest(message);
+      logger.error(message);
+      return;
+    }
+
+    const isChatRemoved = chat.status === Status.REMOVED;
+
+    if (isChatRemoved) {
+      const message = "Message cannot be updated in the removed chat.";
+      res.badRequest(message);
+      logger.error(message);
+      return;
+    }
+
+    const userJoinedChat = chat.users.find((user) => user.id === userId);
+
+    if (!userJoinedChat) {
+      const message = "User is not invited to the chat.";
+      res.forbidden(message);
+      logger.error(message);
+      return;
+    }
+
+    await MessageRepository.update({ id: messageId }, messageToUpdate);
 
     const updatedMessage = await MessageRepository.findOneBy({
       id: messageId,

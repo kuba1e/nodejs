@@ -16,6 +16,9 @@ export class Token {
   refreshToken: string;
 
   @Column()
+  accessToken: string;
+
+  @Column()
   userId: string;
 
   @OneToOne(() => User, (user) => user.token)

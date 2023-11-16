@@ -1,4 +1,4 @@
-import { User } from "../entity";
+import { TokenPayload } from "./token";
 
 export {};
 
@@ -7,21 +7,22 @@ declare global {
     interface Response {
       badRequest: (message?: string) => void;
       unauthorized: (message?: string) => void;
+      forbidden: (message?: string) => void;
       notFound: (message?: string) => void;
       serverError: (message?: string) => void;
       success: ({ data, message }: { data?: any; message?: string }) => void;
       successWithToken: ({
         data,
-        refreshToken,
+        accessToken,
         message,
       }: {
         data?: any;
-        refreshToken?: string;
+        accessToken?: string;
         message?: string;
       }) => void;
     }
     interface Request {
-      userData: Partial<User>;
+      auth: TokenPayload;
     }
   }
 }

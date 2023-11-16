@@ -1,14 +1,12 @@
 import { NextFunction, Response } from "express";
 import bcrypt from "bcrypt";
-import { plainToClass } from "class-transformer";
 import { User } from "../../entity";
 import { TypedRequest } from "../../types/request";
-import { DEFAULT_CHAT_SETTINGS } from "../../config/chatSettings";
+import { DEFAULT_CHAT_SETTINGS } from "../../config/chat";
 import { SettingsRepository } from "../../models/settings";
 import { validate } from "class-validator";
 import { UserRepository } from "../../models/user";
 import logger from "../../utils/logger";
-import { UserResponseDTO } from "../../dto/UserResponseDTO";
 
 const saltRounds = Number(process.env.SALT_ROUNDS);
 
@@ -46,21 +44,17 @@ export const registration = async (
     };
 
     const errors = await validate(newUser);
+
     if (errors.length > 0) {
       throw new Error(`Validation failed! Errors: ${errors.join(" ")}`);
-    } else {
-      await UserRepository.save(newUser);
-
-      const user = await UserRepository.findOneBy({
-        email,
-        nickname,
-      });
-
-      const transformedUser = plainToClass(UserResponseDTO, user);
-
-      res.success({ data: transformedUser });
-      logger.info(`Successfully created user with id: ${transformedUser.id}`);
     }
+
+    await UserRepository.save(newUser);
+
+    const user = await UserRepository.getUserByEmail(email);
+
+    res.success({ data: user });
+    logger.info(`Successfully created user with id: ${user.id}`);
   } catch (error) {
     const message = `Internal Server Error: ${error.message}`;
     logger.error(message);

@@ -10,7 +10,6 @@ import {
 import { Message } from "./Message";
 import { User } from "./User";
 import { Status, ChatType } from "../types/chat";
-import { UserRole } from "../types/user";
 import { UserToChat } from "./UserToChat";
 
 @Entity()

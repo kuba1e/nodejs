@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { ChatRepository } from "../../models/chat";
 import logger from "../../utils/logger";
-import { Status } from "../../types/chat";
+import { ChatOperations, Status } from "../../types/chat";
+import { canUserManageChat } from "../../utils/chat/canUserManageChat";
 
 export const remove = async (
   req: Request,
@@ -10,6 +11,26 @@ export const remove = async (
 ) => {
   try {
     const { chatId } = req.params;
+
+    const userId = req.auth.id;
+
+    const chat = await ChatRepository.findOneBy({ id: chatId });
+
+    if (!chat) {
+      const message = "Chat does not exist.";
+      res.badRequest(message);
+      logger.error(message);
+      return;
+    }
+
+    if (
+      !canUserManageChat({ userId, chat, operation: ChatOperations.REMOVE })
+    ) {
+      const message = "User does not have permission to remove chat.";
+      res.forbidden(message);
+      logger.error(message);
+      return;
+    }
 
     await ChatRepository.update({ id: chatId }, { status: Status.REMOVED });
 

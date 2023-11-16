@@ -1,7 +1,6 @@
 import { ChatResponseDTO } from "../dto/ChatResponseDTO";
 import { UserResponseDTO } from "../dto/UserResponseDTO";
 import { Chat } from "../entity";
-import { plainToClass } from "class-transformer";
 
 export function transformChatResponse(chat: Chat) {
   const users = chat.users.map((user) => {
@@ -9,18 +8,13 @@ export function transformChatResponse(chat: Chat) {
       ({ userId }) => userId === user.id
     );
 
-    const userResponseDto = plainToClass(UserResponseDTO, user);
-
     return {
-      ...userResponseDto,
+      ...user,
       userRole: roleToChat.userRole,
     };
   });
 
-  const transformedChat = {
-    ...chat,
-    users,
-  };
+  const { userToChats, ...chatInfo } = chat;
 
-  return plainToClass(ChatResponseDTO, transformedChat);
+  return { ...chatInfo, users };
 }

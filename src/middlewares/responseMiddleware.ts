@@ -18,20 +18,18 @@ function responseMiddleware(req: Request, res: Response, next: NextFunction) {
     res.status(HttpCode.NOT_FOUND).json({ message });
   };
 
+  res.forbidden = (message) => {
+    res.status(HttpCode.FORBIDDEN).json({ message });
+  };
+
   res.serverError = (message) => {
     res.status(HttpCode.INTERNAL_SERVER_ERROR).json({ message });
   };
 
   res.successWithToken = (data = {}) => {
-    const { refreshToken, ...otherData } = data;
+    const { accessToken, ...otherData } = data;
 
-    res.cookie("refreshToken", refreshToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      sameSite: "none",
-      httpOnly: true,
-      secure: false,
-    });
-    res.status(HttpCode.OK).json(otherData);
+    res.status(HttpCode.OK).json({ accessToken, ...otherData });
   };
 
   next();

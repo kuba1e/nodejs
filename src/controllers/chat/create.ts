@@ -14,9 +14,18 @@ export const create = async (
   next: NextFunction
 ) => {
   try {
-    const { creatorId, title, type } = req.body;
+    const { title, type } = req.body;
+
+    const creatorId = req.auth.id;
 
     const user = await UserRepository.findOneBy({ id: creatorId });
+
+    if (!user) {
+      const message = "User does not exist.";
+      res.badRequest(message);
+      logger.error(message);
+      return;
+    }
 
     const chat = {
       creatorId: user.id,
@@ -35,19 +44,9 @@ export const create = async (
 
     await UserToChatRepository.save(userToChat);
 
-    const newChat = await ChatRepository.findOne({
-      where: {
-        id: savedChat.id,
-      },
-      relations: {
-        users: true,
-        userToChats: true,
-      },
-    });
+    const newChat = await ChatRepository.getChatById(savedChat.id);
 
-    const transformedChat = transformChatResponse(newChat);
-
-    res.success({ data: transformedChat });
+    res.success({ data: newChat });
     logger.info(`Successfully created the chat with id: ${savedChat.id}`);
   } catch (error) {
     const message = `Internal Server Error: ${error.message}`;

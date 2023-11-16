@@ -1,4 +1,3 @@
-import { Response } from "express";
 import jwt from "jsonwebtoken";
 
 const jwtAccessSecretKey = process.env.ACCESS_SECRET_KEY;

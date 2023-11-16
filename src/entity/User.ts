@@ -36,7 +36,7 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @CreateDateColumn()

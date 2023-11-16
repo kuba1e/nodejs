@@ -4,6 +4,8 @@ import { TypedRequest } from "../../types/request";
 import { ChatRepository } from "../../models/chat";
 import logger from "../../utils/logger";
 import { transformChatResponse } from "../../utils/transformChatResponse";
+import { canUserManageChat } from "../../utils/chat/canUserManageChat";
+import { ChatOperations, Status } from "../../types/chat";
 
 export const update = async (
   req: TypedRequest<Chat>,
@@ -13,21 +15,45 @@ export const update = async (
   try {
     const { chatId } = req.params;
     const chatInfo = req.body;
+    const userId = req.auth.id;
 
-    await ChatRepository.update({ id: chatId }, chatInfo);
-    const updatedChat = await ChatRepository.findOne({
-      where: {
-        id: chatId as string,
-      },
+    const chat = await ChatRepository.findOne({
+      where: { id: chatId },
       relations: {
         users: true,
         userToChats: true,
       },
     });
 
-    const transformedChat = transformChatResponse(updatedChat);
+    if (!chat) {
+      const message = "Chat does not exist.";
+      res.badRequest("Chat does not exist.");
+      logger.error(message);
+      return;
+    }
 
-    res.success({ data: transformedChat });
+    const isChatRemoved = chat.status === Status.REMOVED;
+
+    if (isChatRemoved) {
+      const message = "Removed chat cannot be updated.";
+      res.badRequest("Chat does not exist.");
+      logger.error(message);
+      return;
+    }
+
+    if (
+      !canUserManageChat({ userId, chat, operation: ChatOperations.UPDATE })
+    ) {
+      const message = "User does not have permission to update chat.";
+      res.forbidden(message);
+      logger.error(message);
+      return;
+    }
+
+    await ChatRepository.update({ id: chatId }, chatInfo);
+    const updatedChat = await ChatRepository.getChatById(chatId);
+
+    res.success({ data: updatedChat });
     logger.info(`Successfully updated the chat with id: ${updatedChat.id}`);
   } catch (error) {
     const message = `Internal Server Error: ${error.message}`;
