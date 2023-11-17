@@ -1,5 +1,3 @@
-import { ChatResponseDTO } from "../dto/ChatResponseDTO";
-import { UserResponseDTO } from "../dto/UserResponseDTO";
 import { Chat } from "../entity";
 
 export function transformChatResponse(chat: Chat) {
