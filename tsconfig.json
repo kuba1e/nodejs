@@ -6,6 +6,8 @@
     "outDir": "./dist",
     "esModuleInterop": true,
     "strict": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "typeRoots": ["./src/types/typings.d.ts"]
   }
 }

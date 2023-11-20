@@ -1,19 +1,16 @@
 import { Router } from "express";
-import {
-  createMessage,
-  deleteMessage,
-  getMessages,
-  updateMessage,
-} from "../../controllers/messages";
+import { messageController } from "../../controllers/message/message";
 
 const router = Router();
 
-router.get("/", getMessages);
+router.get("/:chatId", messageController.getByChatId);
 
-router.post("/", createMessage);
+router.post("/:chatId", messageController.create);
 
-router.patch("/:id", updateMessage);
+router.patch("/:messageId", messageController.update);
 
-router.delete("/:id", deleteMessage);
+router.delete("/:messageId", messageController.remove);
+
+router.post("/:chatId/:messageId", messageController.forward);
 
 export default router;

@@ -18,8 +18,18 @@ function responseMiddleware(req: Request, res: Response, next: NextFunction) {
     res.status(HttpCode.NOT_FOUND).json({ message });
   };
 
+  res.forbidden = (message) => {
+    res.status(HttpCode.FORBIDDEN).json({ message });
+  };
+
   res.serverError = (message) => {
     res.status(HttpCode.INTERNAL_SERVER_ERROR).json({ message });
+  };
+
+  res.successWithToken = (data = {}) => {
+    const { accessToken, ...otherData } = data;
+
+    res.status(HttpCode.OK).json({ accessToken, ...otherData });
   };
 
   next();
