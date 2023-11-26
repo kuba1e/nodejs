@@ -7,6 +7,8 @@ import { SettingsRepository } from "../../models/settings";
 import { validate } from "class-validator";
 import { UserRepository } from "../../models/user";
 import logger from "../../utils/logger";
+import { generate } from "../../utils/token/generate";
+import { TokenRepository } from "../../models/token";
 
 const saltRounds = Number(process.env.SALT_ROUNDS);
 
@@ -53,7 +55,23 @@ export const registration = async (
 
     const user = await UserRepository.getUserByEmail(email);
 
-    res.success({ data: user });
+    const tokens = generate({
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+
+    await TokenRepository.upsert(
+      {
+        refreshToken: tokens.refreshToken,
+        accessToken: tokens.accessToken,
+        userId: user.id,
+      },
+      ["userId"]
+    );
+
+    res.successWithToken({ data: user, accessToken: tokens.accessToken });
     logger.info(`Successfully created user with id: ${user.id}`);
   } catch (error) {
     const message = `Internal Server Error: ${error.message}`;

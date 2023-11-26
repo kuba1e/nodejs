@@ -4,7 +4,7 @@ import userRoutes from "./authentication";
 const router = Router();
 
 function buildPublicRoutes() {
-  router.use("/user", userRoutes);
+  router.use("/auth", userRoutes);
 
   return router;
 }

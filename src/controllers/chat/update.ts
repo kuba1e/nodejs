@@ -51,7 +51,7 @@ export const update = async (
     }
 
     await ChatRepository.update({ id: chatId }, chatInfo);
-    const updatedChat = await ChatRepository.getChatById(chatId);
+    const updatedChat = await ChatRepository.getById(chatId);
 
     res.success({ data: updatedChat });
     logger.info(`Successfully updated the chat with id: ${updatedChat.id}`);

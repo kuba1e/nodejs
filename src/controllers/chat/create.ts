@@ -44,7 +44,7 @@ export const create = async (
 
     await UserToChatRepository.save(userToChat);
 
-    const newChat = await ChatRepository.getChatById(savedChat.id);
+    const newChat = await ChatRepository.getById(savedChat.id);
 
     res.success({ data: newChat });
     logger.info(`Successfully created the chat with id: ${savedChat.id}`);

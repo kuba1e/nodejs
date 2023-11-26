@@ -26,7 +26,7 @@ function responseMiddleware(req: Request, res: Response, next: NextFunction) {
     res.status(HttpCode.INTERNAL_SERVER_ERROR).json({ message });
   };
 
-  res.successWithToken = (data = {}) => {
+  res.successWithToken = (data) => {
     const { accessToken, ...otherData } = data;
 
     res.status(HttpCode.OK).json({ accessToken, ...otherData });

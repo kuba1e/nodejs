@@ -1,3 +1,5 @@
+import { Chat } from "../entity";
+
 export enum Status {
   REMOVED = 0,
   ACTIVE = 1,
@@ -14,3 +16,5 @@ export enum ChatOperations {
   REMOVE = "remove",
   READ = "read",
 }
+
+export type ChatResponse = Omit<Chat, "userToChats">;
