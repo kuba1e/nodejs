@@ -6,6 +6,7 @@ import {
   ManyToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinTable,
 } from "typeorm";
 import { Message } from "./Message";
 import { User } from "./User";

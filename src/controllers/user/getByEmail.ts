@@ -13,7 +13,7 @@ export const getByEmail = async (
   next: NextFunction
 ) => {
   try {
-    const { email, password: providedPassword } = req.body;
+    const email = req.auth.email;
 
     const user = await UserRepository.getUserByEmail(email);
 

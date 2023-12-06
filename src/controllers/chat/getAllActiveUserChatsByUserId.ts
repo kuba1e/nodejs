@@ -5,7 +5,7 @@ import { UserRepository } from "../../models/user";
 import { ChatRepository } from "../../models/chat";
 import logger from "../../utils/logger";
 
-export const getAllActiveByUserId = async (
+export const getAllActiveUserChatsByUserId = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -13,7 +13,7 @@ export const getAllActiveByUserId = async (
   try {
     const userId = req.auth.id;
 
-    const chats = await ChatRepository.getAllActiveByUserId(userId);
+    const chats = await UserRepository.getAllActiveUserChats(userId);
     res.success({ data: chats });
     logger.info(`Successfully found chats for user with id: ${userId}`);
   } catch (error) {
