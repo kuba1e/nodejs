@@ -22,7 +22,13 @@ export const remove = async (
       return;
     }
 
-    const chat = await ChatRepository.findOneBy({ id: message.chatId });
+    const chat = await ChatRepository.findOne({
+      where: { id: message.chatId },
+      relations: {
+        userToChats: true,
+        users: true,
+      },
+    });
 
     if (!chat) {
       const message = "Chat does not exist.";
@@ -50,7 +56,7 @@ export const remove = async (
     }
 
     await MessageRepository.update(
-      { id: messageId },
+      { id: message.id },
       { status: Status.REMOVED }
     );
 

@@ -14,6 +14,7 @@ export const update = async (
   try {
     const { messageId } = req.params;
     const messageToUpdate = req.body;
+    console.log(messageToUpdate);
     const userId = req.auth.id;
 
     const message = await MessageRepository.findOneBy({ id: messageId });
@@ -25,7 +26,13 @@ export const update = async (
       return;
     }
 
-    const chat = await ChatRepository.findOneBy({ id: message.chatId });
+    const chat = await ChatRepository.findOne({
+      where: { id: message.chatId },
+      relations: {
+        userToChats: true,
+        users: true,
+      },
+    });
 
     if (!chat) {
       const message = "Chat does not exist.";

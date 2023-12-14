@@ -20,7 +20,13 @@ export const forward = async (
       return;
     }
 
-    const chat = await ChatRepository.findOneBy({ id: chatId });
+    const chat = await ChatRepository.findOne({
+      where: { id: chatId },
+      relations: {
+        userToChats: true,
+        users: true,
+      },
+    });
 
     if (!chat) {
       const message = "Chat does not exist.";

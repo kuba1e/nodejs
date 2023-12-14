@@ -15,7 +15,10 @@ export const getByChatId = async (
     const { offset = 0, pageSize = 20 } = req.query;
     const userId = req.auth.id;
 
-    const chat = await ChatRepository.findOneBy({ id: chatId });
+    const chat = await ChatRepository.findOne({
+      where: { id: chatId },
+      relations: { users: true, userToChats: true },
+    });
 
     if (!chat) {
       const message = "Chat does not exist.";

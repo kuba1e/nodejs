@@ -10,5 +10,15 @@ export const optionsMiddleware = (
     "Access-Control-Allow-Methods",
     "OPTIONS, POST, GET, PATCH, DELETE"
   );
-  res.sendStatus(HttpCode.NO_CONTENT);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(HttpCode.NO_CONTENT);
+  } else {
+    next();
+  }
 };

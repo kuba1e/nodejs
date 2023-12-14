@@ -18,6 +18,7 @@ export const create = async (
 
     const chat = await ChatRepository.findOne({
       where: { id: chatId },
+      relations: { users: true },
     });
 
     if (!chat) {
