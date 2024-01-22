@@ -1,6 +1,8 @@
 # Dependency directories
 node_modules/
 
+.git
+
 # Optional npm cache directory
 .npm
 
