@@ -30,8 +30,6 @@ export const login = async (
       return;
     }
 
-    console.log(user);
-
     const tokens = generate({
       id: user.id,
       email: user.email,

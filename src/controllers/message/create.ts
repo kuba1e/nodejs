@@ -5,6 +5,8 @@ import { ChatRepository } from "../../models/chat";
 import logger from "../../utils/logger";
 import { MessageRepository } from "../../models/message";
 import { Status } from "../../types/chat";
+import { sendMessageToQueue } from "../../services/sqs";
+import { SQS_MESSAGE_TYPE } from "../../types/sqs";
 
 export const create = async (
   req: TypedRequest<Pick<Message, "text" | "creatorId">>,
@@ -54,6 +56,13 @@ export const create = async (
     };
 
     const savedMessage = await MessageRepository.save(message);
+
+    const queueMessage = {
+      type: SQS_MESSAGE_TYPE.NEW_MESSAGE,
+      payload: savedMessage,
+    };
+
+    sendMessageToQueue(JSON.stringify(queueMessage));
 
     res.success({
       data: savedMessage,

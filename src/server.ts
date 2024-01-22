@@ -10,7 +10,6 @@ import { secureRoutes } from "./routes/secure";
 import logger from "./utils/logger";
 import { AppDataSource } from "./data-source";
 import { publicRoutes } from "./routes";
-import { sendMessageToQueue } from "./middlewares/sqs";
 
 const PORT = process.env.PORT ?? 5000;
 
@@ -40,8 +39,6 @@ AppDataSource.initialize()
     app.listen(PORT, () => {
       logger.info(`Server running on ${PORT}.`);
     });
-
-    sendMessageToQueue("Hello from SQS");
   })
   .catch((error) => {
     logger.error(`error from db${error}`);

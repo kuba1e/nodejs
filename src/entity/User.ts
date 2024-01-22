@@ -14,8 +14,8 @@ import { Settings } from "./Settings";
 import { Chat } from "./Chat";
 import { IsEmail } from "class-validator";
 import { Token } from "./Token";
-import { UserRole } from "../types/user";
 import { UserToChat } from "./UserToChat";
+import { Communications } from "./Communications";
 
 @Entity()
 export class User {
@@ -72,4 +72,7 @@ export class User {
 
   @OneToMany(() => UserToChat, (userToChat) => userToChat.user)
   userToChats: Array<UserToChat>;
+
+  @OneToOne(() => Communications, (communications) => communications.user)
+  communications: Communications;
 }
