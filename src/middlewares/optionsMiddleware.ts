@@ -6,6 +6,7 @@ export const optionsMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, POST, GET, PATCH, DELETE"
